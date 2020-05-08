@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 
 namespace Cw10.Services
 {
-    interface IStudentDbService
+    public interface IStudentDbService
     {
+        public void EnrollStudent();
+        public void PromoteStudents();
     }
 }
