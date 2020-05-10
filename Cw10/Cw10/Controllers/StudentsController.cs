@@ -21,7 +21,16 @@ namespace Cw10.Controllers
         [HttpGet]
         public IActionResult GetStudents()
         {
-            return Ok();
+            IActionResult response;
+            try
+            {
+                response = Ok(_context.GetStudents());
+            }catch(Exception exc)
+            {
+                response = BadRequest(exc);
+            }
+
+            return response;
         }
     }
 }

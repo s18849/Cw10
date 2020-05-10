@@ -1,4 +1,5 @@
-﻿using Cw10.Models;
+﻿using Cw10.DTOs.Responses;
+using Cw10.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,21 @@ namespace Cw10.Services
         public void EnrollStudent()
         {
             throw new NotImplementedException();
+        }
+
+        public GetStudentResponse GetStudents()
+        {
+            GetStudentResponse response = new GetStudentResponse();
+            try
+            {
+                response.Students = _dbContext.Student.ToList();
+            }catch(Exception exc)
+            {
+                throw new Exception("Blad przy zwracaniu studentow z bazy" + exc.StackTrace);
+            }
+
+            return response;
+
         }
 
         public void PromoteStudents()
