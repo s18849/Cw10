@@ -105,11 +105,70 @@ namespace Cw10.Services
                 _dbContext.Entry(s).State = EntityState.Modified;
                 _dbContext.SaveChanges();      
         }
-        
 
-        public void PromoteStudents()
+        public PromoteStudentResponse PromoteStudents(PromoteStudentRequest request)
         {
-            throw new NotImplementedException();
+            PromoteStudentResponse response = new PromoteStudentResponse();
+            List<Student> stud = new List<Student>();
+            
+            var studies = _dbContext.Studies
+                                        .Where(s => s.Name.Equals(request.Studies))
+                                        .Single();
+            var OldEnrollment = _dbContext.Enrollment
+                                        .Where(e => e.IdStudy == studies.IdStudy && e.Semester == request.Semester)
+                                        .Single();
+            var enrollment = _dbContext.Enrollment
+                                        .Where(e => e.IdStudy == studies.IdStudy && e.Semester == request.Semester+1)
+                                        .SingleOrDefault();
+            int idEnrollment;
+            if (enrollment == null)
+            {
+                idEnrollment = _dbContext.Enrollment.Count()+1;
+                var e = new Enrollment
+                {
+                    IdEnrollment = idEnrollment,
+                    Semester = request.Semester+1,
+                    IdStudy = studies.IdStudy,
+                    StartDate = DateTime.Now
+                };
+
+                _dbContext.Enrollment.Add(e);
+                _dbContext.SaveChanges();
+            }
+            else
+            {
+                idEnrollment = enrollment.IdEnrollment;
+            }
+
+            var students = _dbContext.Student
+                                        .Where(s => s.IdEnrollment == OldEnrollment.IdEnrollment)
+                                        .ToList();
+            foreach(Student s in students)
+            {
+                s.IdEnrollment = idEnrollment;
+               _dbContext.SaveChanges();
+                var s1 = new Student
+                {
+                    IndexNumber = s.IndexNumber,
+                    FirstName = s.FirstName,
+                    LastName = s.LastName,
+                    BirthDate = s.BirthDate,
+                    IdEnrollment = idEnrollment,
+
+                };
+                stud.Add(s1);
+ 
+            }
+            
+            response.students = stud;
+
+
+            return response;
+
+
+
+
+
         }
     }
 }

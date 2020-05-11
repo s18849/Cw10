@@ -75,7 +75,22 @@ namespace Cw10.Controllers
             }
             catch (Exception exc)
             {
-                response = BadRequest("Blad przy zwracaniu studentow z bazy" + exc.StackTrace);
+                response = BadRequest("Blad przy zapisywaniu studentow na studia" + exc.StackTrace);
+            }
+
+            return response;
+        }
+        [HttpPost("promote")]
+        public IActionResult PromoteStudents(PromoteStudentRequest request)
+        {
+            IActionResult response;
+            try
+            {
+                response = Ok(_context.PromoteStudents(request));
+            }
+            catch (Exception exc)
+            {
+                response = BadRequest("Blad przy promocji studentow" + exc.StackTrace);
             }
 
             return response;
