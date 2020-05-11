@@ -26,14 +26,14 @@ namespace Cw10.Controllers
             try
             {
                 response = Ok(_context.GetStudents());
-            }catch(Exception exc)
+            } catch (Exception exc)
             {
                 response = BadRequest(exc);
             }
 
             return response;
         }
-        [HttpPost]
+        [HttpPost("modifyStudent")]
         public IActionResult ModifyStudent(ModifyStudentRequest request)
         {
             IActionResult response;
@@ -41,6 +41,22 @@ namespace Cw10.Controllers
             {
                 _context.ModifyStudent(request);
                 response = Ok("Pomyslnie zmodyfikowano studenta o indexie " + request.indexNumber);
+            }
+            catch (Exception exc)
+            {
+                response = BadRequest(exc);
+            }
+
+            return response;
+        }
+        [HttpPost("deleteStudent")]
+        public IActionResult DeleteStudent(DeleteStudentRequest request)
+        {
+            IActionResult response;
+            try
+            {
+                _context.DeleteStudent(request);
+                response = Ok("Pomyslnie usunieto studenta o indexie " + request.indexNumber);
             }
             catch (Exception exc)
             {

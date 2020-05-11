@@ -14,5 +14,6 @@ namespace Cw10.Services
 
         public GetStudentResponse GetStudents();
         public void ModifyStudent(ModifyStudentRequest request);
+        public void DeleteStudent(DeleteStudentRequest request);
     }
 }

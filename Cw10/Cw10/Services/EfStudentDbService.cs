@@ -15,6 +15,21 @@ namespace Cw10.Services
         {
             _dbContext = context;
         }
+
+        public void DeleteStudent(DeleteStudentRequest request)
+        {
+            try
+            {
+                Student student = _dbContext.Student.SingleOrDefault(x => x.IndexNumber.Equals(request.indexNumber));
+                _dbContext.Student.Remove(student);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception exc)
+            {
+                throw new Exception("Blad przy usuwaniu studenta" + exc.StackTrace);
+            }
+        }
+
         public void EnrollStudent()
         {
             throw new NotImplementedException();
@@ -53,6 +68,7 @@ namespace Cw10.Services
             
             
         }
+        
 
         public void PromoteStudents()
         {
