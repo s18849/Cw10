@@ -19,74 +19,79 @@ namespace Cw10.Services
 
         public void DeleteStudent(DeleteStudentRequest request)
         {
-            try
+            var s = new Student
             {
-                var s = new Student
-                {
-                    IndexNumber = request.indexNumber
-                };
+              IndexNumber = request.indexNumber
+            };
             _dbContext.Attach(s);
             _dbContext.Remove(s);
             _dbContext.SaveChanges();
-            }
-            catch (Exception exc)
-            {
-                throw new Exception("Blad przy usuwaniu studenta" + exc.StackTrace);
-            }
+
         }
 
         public EnrollStudentResponse EnrollStudent(EnrollStudentRequest request)
         {
             EnrollStudentResponse response = new EnrollStudentResponse();
-            try
-            {
+
+
+            
                 var studies = _dbContext.Studies
                                         .Where(s => s.Name.Equals(request.Studies))
                                         .Single();
-
-                var Enrollment = _dbContext.Enrollment
+                var enrollment = _dbContext.Enrollment
                                             .Where(e => e.IdStudy == studies.IdStudy && e.Semester == 1)
-                                            .Single();
-
+                                            .SingleOrDefault();
                 
-                    
-
-                var student = new Student
+              
+            int idEnrollment;
+            if (enrollment == null)
+            {
+                idEnrollment = _dbContext.Enrollment.Count();
+                var e = new Enrollment
                 {
-                    IndexNumber = request.indexNumber,
-                    FirstName = request.firstName,
-                    LastName = request.lasttName,
-                    BirthDate = request.birthDate
+                    IdEnrollment = idEnrollment,
+                    Semester = 1,
+                    IdStudy = studies.IdStudy,
+                    StartDate = DateTime.Now
+                };
+                
+                _dbContext.Enrollment.Add(e);
+                _dbContext.SaveChanges();
+            }
+            else
+            {
+                idEnrollment = enrollment.IdEnrollment;
+            }
+
+            var student = new Student
+            {
+                IndexNumber = request.indexNumber,
+                FirstName = request.firstName,
+                LastName = request.lastName,
+                BirthDate = request.birthDate,
+                IdEnrollment = idEnrollment
 
                 };
                 _dbContext.Student.Add(student);
                 _dbContext.SaveChanges();
-            }catch(Exception exc)
+            response = new EnrollStudentResponse
             {
-                throw new Exception("Blad przy dodawaniu nowego studenta " + exc.StackTrace);
-            }
+                lastName = student.LastName,
+                semester = enrollment.Semester,
+                startDate = enrollment.StartDate.Value
+            };
             return response;
         }
 
         public GetStudentResponse GetStudents()
         {
             GetStudentResponse response = new GetStudentResponse();
-            try
-            {
-                response.Students = _dbContext.Student.ToList();
-            }catch(Exception exc)
-            {
-                throw new Exception("Blad przy zwracaniu studentow z bazy" + exc.StackTrace);
-            }
-
+            response.Students = _dbContext.Student.ToList();
             return response;
-
         }
 
         public void ModifyStudent(ModifyStudentRequest request)
         {
-            try
-            {
                 var s = new Student
                 {
                     IndexNumber = request.indexNumber,
@@ -98,11 +103,7 @@ namespace Cw10.Services
                 };
                 _dbContext.Attach(s);
                 _dbContext.Entry(s).State = EntityState.Modified;
-                _dbContext.SaveChanges();
-            }catch(Exception exc)
-            {
-                throw new Exception("Błąd przy modyfikowaniu studenta" + exc.StackTrace);
-            }
+                _dbContext.SaveChanges();      
         }
         
 

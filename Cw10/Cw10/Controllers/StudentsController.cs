@@ -28,7 +28,7 @@ namespace Cw10.Controllers
                 response = Ok(_context.GetStudents());
             } catch (Exception exc)
             {
-                response = BadRequest(exc);
+                response = BadRequest("Blad przy zwracaniu studentow z bazy" + exc.StackTrace);
             }
 
             return response;
@@ -44,7 +44,7 @@ namespace Cw10.Controllers
             }
             catch (Exception exc)
             {
-                response = BadRequest(exc);
+                response = BadRequest("Błąd przy modyfikowaniu studenta" + exc.StackTrace);
             }
 
             return response;
@@ -60,7 +60,22 @@ namespace Cw10.Controllers
             }
             catch (Exception exc)
             {
-                response = BadRequest(exc);
+                response = BadRequest("Blad przy usuwaniu studenta" + exc.StackTrace);
+            }
+
+            return response;
+        }
+        [HttpPost("enroll")]
+        public IActionResult EnrollStudents(EnrollStudentRequest request)
+        {
+            IActionResult response;
+            try
+            {
+                response = Ok(_context.EnrollStudent(request));
+            }
+            catch (Exception exc)
+            {
+                response = BadRequest("Blad przy zwracaniu studentow z bazy" + exc.StackTrace);
             }
 
             return response;

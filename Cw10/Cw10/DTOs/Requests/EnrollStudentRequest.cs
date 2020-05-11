@@ -9,7 +9,7 @@ namespace Cw10.DTOs.Requests
     {
         public string indexNumber { get; set; }
         public string firstName { get; set; }
-        public string lasttName { get; set; }
+        public string lastName { get; set; }
         public DateTime birthDate { get; set; }
         public string Studies { get; set; }
     }
