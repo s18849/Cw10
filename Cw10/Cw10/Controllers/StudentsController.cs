@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cw10.DTOs.Requests;
 using Cw10.Models;
 using Cw10.Services;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,22 @@ namespace Cw10.Controllers
             {
                 response = Ok(_context.GetStudents());
             }catch(Exception exc)
+            {
+                response = BadRequest(exc);
+            }
+
+            return response;
+        }
+        [HttpPost]
+        public IActionResult ModifyStudent(ModifyStudentRequest request)
+        {
+            IActionResult response;
+            try
+            {
+                _context.ModifyStudent(request);
+                response = Ok("Pomyslnie zmodyfikowano studenta o indexie " + request.indexNumber);
+            }
+            catch (Exception exc)
             {
                 response = BadRequest(exc);
             }

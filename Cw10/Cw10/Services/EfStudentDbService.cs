@@ -1,4 +1,5 @@
-﻿using Cw10.DTOs.Responses;
+﻿using Cw10.DTOs.Requests;
+using Cw10.DTOs.Responses;
 using Cw10.Models;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,25 @@ namespace Cw10.Services
 
             return response;
 
+        }
+
+        public void ModifyStudent(ModifyStudentRequest request)
+        {
+            try
+            {
+                Student student = _dbContext.Student.SingleOrDefault(x => x.IndexNumber.Equals(request.indexNumber));
+                student.FirstName = request.firstName;
+                student.LastName = request.lastName;
+                student.BirthDate = request.birthDate;
+                student.IdEnrollment = request.idEnrollment;
+                student.Password = request.password;
+                _dbContext.SaveChanges();
+            }catch(Exception exc)
+            {
+                throw new Exception("Blad przy modyfikowaniu studenta" + exc.StackTrace);
+            }
+            
+            
         }
 
         public void PromoteStudents()

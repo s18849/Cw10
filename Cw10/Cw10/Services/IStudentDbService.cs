@@ -1,4 +1,5 @@
-﻿using Cw10.DTOs.Responses;
+﻿using Cw10.DTOs.Requests;
+using Cw10.DTOs.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace Cw10.Services
         public void PromoteStudents();
 
         public GetStudentResponse GetStudents();
+        public void ModifyStudent(ModifyStudentRequest request);
     }
 }
