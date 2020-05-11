@@ -33,7 +33,7 @@ namespace Cw10.Controllers
 
             return response;
         }
-        [HttpPost("modifyStudent")]
+        [HttpPost("modify")]
         public IActionResult ModifyStudent(ModifyStudentRequest request)
         {
             IActionResult response;
@@ -49,7 +49,7 @@ namespace Cw10.Controllers
 
             return response;
         }
-        [HttpPost("deleteStudent")]
+        [HttpPost("delete")]
         public IActionResult DeleteStudent(DeleteStudentRequest request)
         {
             IActionResult response;

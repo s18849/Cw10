@@ -1,6 +1,7 @@
 ﻿using Cw10.DTOs.Requests;
 using Cw10.DTOs.Responses;
 using Cw10.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,13 @@ namespace Cw10.Services
         {
             try
             {
-                Student student = _dbContext.Student.SingleOrDefault(x => x.IndexNumber.Equals(request.indexNumber));
-                _dbContext.Student.Remove(student);
-                _dbContext.SaveChanges();
+                var s = new Student
+                {
+                    IndexNumber = request.indexNumber
+                };
+            _dbContext.Attach(s);
+            _dbContext.Remove(s);
+            _dbContext.SaveChanges();
             }
             catch (Exception exc)
             {
@@ -30,9 +35,37 @@ namespace Cw10.Services
             }
         }
 
-        public void EnrollStudent()
+        public EnrollStudentResponse EnrollStudent(EnrollStudentRequest request)
         {
-            throw new NotImplementedException();
+            EnrollStudentResponse response = new EnrollStudentResponse();
+            try
+            {
+                var studies = _dbContext.Studies
+                                        .Where(s => s.Name.Equals(request.Studies))
+                                        .Single();
+
+                var Enrollment = _dbContext.Enrollment
+                                            .Where(e => e.IdStudy == studies.IdStudy && e.Semester == 1)
+                                            .Single();
+
+                
+                    
+
+                var student = new Student
+                {
+                    IndexNumber = request.indexNumber,
+                    FirstName = request.firstName,
+                    LastName = request.lasttName,
+                    BirthDate = request.birthDate
+
+                };
+                _dbContext.Student.Add(student);
+                _dbContext.SaveChanges();
+            }catch(Exception exc)
+            {
+                throw new Exception("Blad przy dodawaniu nowego studenta " + exc.StackTrace);
+            }
+            return response;
         }
 
         public GetStudentResponse GetStudents()
@@ -54,19 +87,22 @@ namespace Cw10.Services
         {
             try
             {
-                Student student = _dbContext.Student.SingleOrDefault(x => x.IndexNumber.Equals(request.indexNumber));
-                student.FirstName = request.firstName;
-                student.LastName = request.lastName;
-                student.BirthDate = request.birthDate;
-                student.IdEnrollment = request.idEnrollment;
-                student.Password = request.password;
+                var s = new Student
+                {
+                    IndexNumber = request.indexNumber,
+                    FirstName = request.firstName,
+                    LastName = request.lastName,
+                    BirthDate = request.birthDate,
+                    IdEnrollment = request.idEnrollment,
+                    Password = request.password
+                };
+                _dbContext.Attach(s);
+                _dbContext.Entry(s).State = EntityState.Modified;
                 _dbContext.SaveChanges();
             }catch(Exception exc)
             {
-                throw new Exception("Blad przy modyfikowaniu studenta" + exc.StackTrace);
+                throw new Exception("Błąd przy modyfikowaniu studenta" + exc.StackTrace);
             }
-            
-            
         }
         
 

@@ -9,7 +9,7 @@ namespace Cw10.Services
 {
     public interface IStudentDbService
     {
-        public void EnrollStudent();
+        public EnrollStudentResponse EnrollStudent(EnrollStudentRequest request);
         public void PromoteStudents();
 
         public GetStudentResponse GetStudents();
